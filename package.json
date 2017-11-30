@@ -1,0 +1,25 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "A Siri knockoff.",
+  "main": "liri.js",
+  "dependencies": {
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.83.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schapm16/liri-node-app.git"
+  },
+  "author": "Schapm16",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/schapm16/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/schapm16/liri-node-app#readme"
+}
