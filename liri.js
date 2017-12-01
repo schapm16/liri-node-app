@@ -128,7 +128,7 @@ function omdbAPI(parsedInput) {
 //-------------------------------------------
 
 // Function to perform what-it-says - parses txt file into the command and search term and passes to the appropiate command function above
-
+// If "spotify-this-song" or "movie-this" is the command requested, the format must be <command>,"<search terms>".  Exception: White space between the comma and first quote is ok.
 function itSays() {
   var textArray;
 
@@ -138,10 +138,10 @@ function itSays() {
       console.log("Error Occurred:\n" + error);
     }
     else {
-      textArray = data.split(","); //Split the text into an array containing command and search term
+      textArray = data.split(","); //Split the text into an array containing command and search term.  If the command is "my-tweets" with no search term, this will not break.
       
-      if (textArray.length > 1) {
-        textArray[1] = textArray[1].substring(1, textArray[1].length - 1); //Remove quotations around search term in random.txt
+      if (textArray.length > 1) { //If the command in random.txt is "my-tweets" this will be false
+        textArray[1] = textArray[1].trim().substring(1, textArray[1].trim().length - 1); //Remove quotation marks around search term in random.txt
       }
       
       switch (textArray[0]) {
