@@ -5,6 +5,8 @@ var keys = require('./keys.js'); // Contains keys for Twitter and Spotify
 var Twitter = require('twitter');
 
 var Spotify = require('node-spotify-api');
+
+var fs = require('fs');
 // ---------------------------------------
 
 
@@ -17,7 +19,6 @@ const rawInput = process.argv;
 // Function to parse user input
 function parse() {
   var parsedInputArray = [];
-
   for (var i = 3; i < rawInput.length; i++) {
     parsedInputArray.push(rawInput[i]);
   }
@@ -67,7 +68,8 @@ function spotifyAPI(parsedInput) {
 
     if (error) {
       console.log('Error occurred:\n' + error);
-    } else if (data.tracks.total === 0) {
+    }
+    else if (data.tracks.total === 0) {
       console.log('No Song Found!\n');
     }
     else {
@@ -103,13 +105,13 @@ function omdbAPI(parsedInput) {
       console.log(bodyParsed.Error + '\n');
     }
     else {
-      
-      for (var i = 0; i<bodyParsed.Ratings.length; i++) { //Checks if a Rotten Tomatoes rating exists and replaces default message with rating.
+
+      for (var i = 0; i < bodyParsed.Ratings.length; i++) { //Checks if a Rotten Tomatoes rating exists and replaces default message with rating.
         if (bodyParsed.Ratings[i].Source === 'Rotten Tomatoes') {
           rottenTomatoes = bodyParsed.Ratings[i].Value;
         }
       }
-      
+
       console.log(
         'Movie Title: ' + bodyParsed.Title +
         '\nRelease Year: ' + bodyParsed.Year +
@@ -123,8 +125,41 @@ function omdbAPI(parsedInput) {
     }
   });
 }
-
 //-------------------------------------------
+
+// Function to perform what-it-says - parses txt file into the command and search term and passes to the appropiate command function above
+
+function itSays() {
+  var textArray;
+
+  fs.readFile("./random.txt", "utf8", function(error, data) {
+
+    if (error) {
+      console.log("Error Occurred:\n" + error);
+    }
+    else {
+      textArray = data.split(","); //Split the text into an array containing command and search term
+      
+      if (textArray.length > 1) {
+        textArray[1] = textArray[1].substring(1, textArray[1].length - 1); //Remove quotations around search term in random.txt
+      }
+      
+      switch (textArray[0]) {
+        case "my-tweets":
+          twitterAPI();
+          break;
+        
+        case "spotify-this-song":
+          spotifyAPI(textArray[1]);
+          break;
+
+        case "movie-this":
+          omdbAPI(textArray[1]);
+          break;
+      }
+    }
+  });
+}
 
 //>>>>>>>>> End Function Declarations <<<<<<<<
 
@@ -149,6 +184,7 @@ switch (userRequest) {
     break;
 
   case 'do-what-it-says':
+    itSays();
     break;
 
   default: //If an illegitimate command is entered, the following is displayed.
